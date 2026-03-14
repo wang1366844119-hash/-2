@@ -767,7 +767,7 @@ const TechBorder = ({ children }: { children: React.ReactNode }) => {
 };
 
 // --- Page 5 Component ---
-const Page5 = ({ onPrev }: { onPrev: () => void }) => {
+const Page5 = ({ onPrev, onNext }: { onPrev: () => void; onNext: () => void }) => {
   const images = [
     {
       src: "/page5_1.png",
@@ -792,21 +792,33 @@ const Page5 = ({ onPrev }: { onPrev: () => void }) => {
       transition={{ duration: 0.8 }}
       className="relative z-10 w-full h-full flex flex-col items-center justify-center overflow-hidden bg-[#13091a]"
     >
-      <div className="w-full px-12 flex flex-col items-center">
+      <div className="w-full px-12 flex flex-col items-center mt-40">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 w-full max-w-[1800px]">
           {images.map((img, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 100 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 80 }}
+              animate={{ 
+                opacity: 1, 
+                y: [0, -25, 0],
+                rotateZ: [0, 1, -1, 0],
+              }}
               transition={{ 
-                duration: 1, 
-                delay: idx * 0.3,
-                ease: [0.22, 1, 0.36, 1]
+                opacity: { duration: 1.2, delay: idx * 0.4 },
+                y: { 
+                  duration: 5 + idx * 0.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                },
+                rotateZ: {
+                  duration: 7 + idx,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }
               }}
               className="flex flex-col items-center"
             >
-              <div className="relative aspect-square w-full overflow-hidden shadow-2xl">
+              <div className={`relative aspect-square w-full overflow-hidden shadow-2xl ${idx === 2 ? 'bg-black' : ''}`}>
                 <FallbackImage 
                   src={img.src} 
                   alt={img.alt} 
@@ -815,8 +827,15 @@ const Page5 = ({ onPrev }: { onPrev: () => void }) => {
               </div>
               
               {/* Reflection */}
-              <div className="mt-0.5 w-full opacity-50 pointer-events-none select-none" style={{ transform: 'scaleY(-1)' }}>
-                <div className="relative aspect-square w-full overflow-hidden mask-reflection">
+              <div 
+                className="mt-1 w-full opacity-25 pointer-events-none select-none" 
+                style={{ 
+                  transform: 'scaleY(-1)',
+                  maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)',
+                  WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)'
+                }}
+              >
+                <div className="relative aspect-square w-full overflow-hidden">
                   <FallbackImage 
                     src={img.src} 
                     alt={img.alt} 
@@ -827,6 +846,170 @@ const Page5 = ({ onPrev }: { onPrev: () => void }) => {
             </motion.div>
           ))}
         </div>
+      </div>
+
+      {/* Navigation Controls */}
+      <div className="absolute bottom-8 left-8 z-40">
+        <button
+          onClick={onPrev}
+          className="text-white/50 hover:text-white transition-colors flex items-center gap-2 text-sm uppercase tracking-widest cursor-pointer"
+        >
+          ← 上一页
+        </button>
+      </div>
+      <div className="absolute bottom-8 right-8 z-40">
+        <button
+          onClick={onNext}
+          className="text-[#00E599]/70 hover:text-[#00E599] transition-colors flex items-center gap-2 text-sm uppercase tracking-widest cursor-pointer"
+        >
+          下一页 →
+        </button>
+      </div>
+    </motion.div>
+  );
+};
+
+// --- Page 6 Component ---
+const Page6 = ({ onPrev, onNext }: { onPrev: () => void; onNext: () => void }) => {
+  return (
+    <motion.div 
+      key="page6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
+      transition={{ duration: 0.8 }}
+      className="relative z-10 w-full h-full overflow-hidden bg-[#1a0b2e]"
+    >
+      {/* Background Stars (Subtle) */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-20">
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-white rounded-full"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+            }}
+            animate={{ opacity: [0.2, 0.7, 0.2] }}
+            transition={{ duration: 3 + Math.random() * 2, repeat: Infinity }}
+          />
+        ))}
+      </div>
+
+      {/* Main Content Area */}
+      <div className="relative z-10 w-full h-full flex flex-col justify-center px-8 md:px-24 lg:px-40">
+        <div className="relative">
+          {/* Sparkle Icon above the text */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 1.2 }}
+            className="absolute -top-16 left-[45%] md:-top-20 md:left-[40%]"
+          >
+            <svg width="60" height="60" viewBox="0 0 64 64" fill="white">
+              <path d="M26 0C26 14.3594 37.6406 26 52 26C37.6406 26 26 37.6406 26 52C26 37.6406 14.3594 26 0 26C14.3594 26 26 14.3594 26 0Z" />
+              <path d="M48 32C48 38.6274 53.3726 44 60 44C53.3726 44 48 49.3726 48 56C48 49.3726 42.6274 44 36 44C42.6274 44 48 38.6274 48 32Z" transform="translate(4, 10) scale(0.6)" />
+            </svg>
+          </motion.div>
+
+          {/* Text Content - Left Aligned as per image */}
+          <div className="flex flex-col items-start gap-2">
+            <motion.h1
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+              className="text-[4.5rem] md:text-[6.5rem] lg:text-[7.5rem] font-black tracking-tight text-[#00E599] leading-tight"
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
+              世界模型到底是什么？
+            </motion.h1>
+            
+            <motion.h2
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.2, ease: "easeOut", delay: 0.6 }}
+              className="text-[3.5rem] md:text-[5rem] lg:text-[6rem] font-bold tracking-tight text-white leading-tight"
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
+              他会是通往AGI的终极密码吗
+            </motion.h2>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Controls */}
+      <div className="absolute bottom-8 left-8 z-40">
+        <button
+          onClick={onPrev}
+          className="text-white/50 hover:text-white transition-colors flex items-center gap-2 text-sm uppercase tracking-widest cursor-pointer"
+        >
+          ← 上一页
+        </button>
+      </div>
+      <div className="absolute bottom-8 right-8 z-40">
+        <button
+          onClick={onNext}
+          className="text-[#00E599]/70 hover:text-[#00E599] transition-colors flex items-center gap-2 text-sm uppercase tracking-widest cursor-pointer"
+        >
+          下一页 →
+        </button>
+      </div>
+    </motion.div>
+  );
+};
+
+// --- Page 7 Component ---
+const Page7 = ({ onPrev }: { onPrev: () => void }) => {
+  return (
+    <motion.div 
+      key="page7"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
+      transition={{ duration: 0.8 }}
+      className="relative z-10 w-full h-full flex flex-col"
+    >
+      <div className="flex-1 flex flex-col justify-center px-8 md:px-24 lg:px-40">
+        <div className="relative inline-block max-w-max">
+          <SparkleStars />
+          
+          <motion.h1 
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="text-[5rem] md:text-[7rem] lg:text-[9rem] font-black leading-none tracking-tight text-[#00E599] mb-4 drop-shadow-[0_0_30px_rgba(0,229,153,0.3)]"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            什么是世界模型
+          </motion.h1>
+          
+          <motion.h2 
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+            className="text-[3rem] md:text-[4.5rem] lg:text-[6rem] font-bold leading-none tracking-tight text-white"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            他有何不同
+          </motion.h2>
+        </div>
+      </div>
+
+      <div className="absolute bottom-12 right-8 md:bottom-24 md:right-24">
+        <motion.button
+          onClick={onPrev}
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.15)" }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="group relative overflow-hidden rounded-full bg-white/5 backdrop-blur-md border border-white/10 px-8 py-4 md:px-12 md:py-6 cursor-pointer shadow-2xl"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+          <span className="relative z-10 text-xl md:text-3xl font-medium tracking-widest text-white/90">
+            从“看见”到“理解”
+          </span>
+        </motion.button>
       </div>
     </motion.div>
   );
@@ -862,9 +1045,15 @@ export default function App() {
             <Page4 onPrev={handlePrevPage} onNext={handleNextPage} />
           )}
           {currentPage === 5 && (
-            <Page5 onPrev={handlePrevPage} />
+            <Page5 onPrev={handlePrevPage} onNext={handleNextPage} />
           )}
-          {currentPage > 5 && (
+          {currentPage === 6 && (
+            <Page6 onPrev={handlePrevPage} onNext={handleNextPage} />
+          )}
+          {currentPage === 7 && (
+            <Page7 onPrev={handlePrevPage} />
+          )}
+          {currentPage > 7 && (
             <motion.div 
               key="placeholder"
               initial={{ opacity: 0 }}
@@ -888,7 +1077,7 @@ export default function App() {
 
       {/* Vertical Navigation Dots */}
       <div className="fixed right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4">
-        {[1, 2, 3, 4, 5].map((pageNum) => (
+        {[1, 2, 3, 4, 5, 6, 7].map((pageNum) => (
           <button
             key={pageNum}
             onClick={() => setCurrentPage(pageNum)}
